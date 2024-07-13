@@ -1,0 +1,39 @@
+<nz-table [nzData]="consumption" nzBordered>
+    <thead>
+      <tr>
+        <th nzWidth="10%">Id</th>
+        <th nzWidth="10%">Client Name</th>
+        <th nzWidth="10%">Meter Number</th>
+        <th nzWidth="10%">Start Date</th>
+        <th nzWidth="10%">End Date</th>
+        <th nzWidth="10%">Unique Electric Code</th>
+        <th nzWidth="10%">Type Consumption</th>
+        <th nzWidth="10%">Description</th>
+        <th nzWidth="10%">Previous Reading</th>
+        <th nzWidth="10%">Current Reading</th>
+        <th nzWidth="10%">Contract Account</th>
+        <th nzWidth="10%">Billed Days</th>
+        <th nzWidth="10%">Consumption Total</th>
+        <th nzWidth="10%">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of consumption">
+        <td>{{ item.id }}</td>
+        <td>{{ item.nameClient }}</td>
+        <td>{{ item.meterNumber }}</td>
+        <td>{{ item.startDate | date:'yyyy-MM-dd' }}</td>
+        <td>{{ item.endDate | date:'yyyy-MM-dd' }}</td>
+        <td>{{ item.codUniqueElectric }}</td>
+        <td>{{ item.typeConsumption }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.previousReading }}</td>
+        <td>{{ item.currentReading }}</td>
+        <td>{{ item.contractAccount }}</td>
+        <td>{{ item.billedDays }}</td>
+        <td>{{ item.consumptionTotal }}</td>
+        <td>{{ item.total }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  
