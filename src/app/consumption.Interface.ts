@@ -1,7 +1,6 @@
 export interface Consumption {
     id: number;
     nameClient: string;
-    clientId: number;
     codUniqueElectric: number;
     meterNumber: number;
     typeConsumption: string; 

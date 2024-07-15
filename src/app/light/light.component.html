@@ -1,39 +1,133 @@
-<nz-table [nzData]="consumption" nzBordered>
-    <thead>
-      <tr>
-        <th nzWidth="10%">Id</th>
-        <th nzWidth="10%">Client Name</th>
-        <th nzWidth="10%">Meter Number</th>
-        <th nzWidth="10%">Start Date</th>
-        <th nzWidth="10%">End Date</th>
-        <th nzWidth="10%">Unique Electric Code</th>
-        <th nzWidth="10%">Type Consumption</th>
-        <th nzWidth="10%">Description</th>
-        <th nzWidth="10%">Previous Reading</th>
-        <th nzWidth="10%">Current Reading</th>
-        <th nzWidth="10%">Contract Account</th>
-        <th nzWidth="10%">Billed Days</th>
-        <th nzWidth="10%">Consumption Total</th>
-        <th nzWidth="10%">Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of consumption">
-        <td>{{ item.id }}</td>
-        <td>{{ item.nameClient }}</td>
-        <td>{{ item.meterNumber }}</td>
-        <td>{{ item.startDate | date:'yyyy-MM-dd' }}</td>
-        <td>{{ item.endDate | date:'yyyy-MM-dd' }}</td>
-        <td>{{ item.codUniqueElectric }}</td>
-        <td>{{ item.typeConsumption }}</td>
-        <td>{{ item.description }}</td>
-        <td>{{ item.previousReading }}</td>
-        <td>{{ item.currentReading }}</td>
-        <td>{{ item.contractAccount }}</td>
-        <td>{{ item.billedDays }}</td>
-        <td>{{ item.consumptionTotal }}</td>
-        <td>{{ item.total }}</td>
-      </tr>
-    </tbody>
-  </nz-table>
+<nz-card nzTitle="Consumo de Luz">
+    <nz-table #basicTable [nzData]="consumption">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Código Único</th>
+          <th>Número de Medidor</th>
+          <th>Tipo de Consumo</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
+          <th>Descripción</th>
+          <th>Lectura Anterior</th>
+          <th>Lectura Actual</th>
+          <th>Cuenta Contrato</th>
+          <th>Días Facturados</th>
+          <th>Consumo Total</th>
+          <th>Total</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.id }}</td>
+          <td>{{ data.nameClient }}</td>
+          <td>{{ data.codUniqueElectric }}</td>
+          <td>{{ data.meterNumber }}</td>
+          <td>{{ data.typeConsumption }}</td>
+          <td>{{ data.startDate | date }}</td>
+          <td>{{ data.endDate | date }}</td>
+          <td>{{ data.description }}</td>
+          <td>{{ data.previousReading }}</td>
+          <td>{{ data.currentReading }}</td>
+          <td>{{ data.contractAccount }}</td>
+          <td>{{ data.billedDays }}</td>
+          <td>{{ data.consumptionTotal }}</td>
+          <td>{{ data.total }}</td>
+          <td>
+            <a (click)="showEditModal(data)">Editar</a>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a nz-popconfirm nzPopconfirmTitle="¿Está seguro de eliminar este registro?" (nzOnConfirm)="deleteConsumption(data.id)">Eliminar</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
   
+    <button nz-button nzType="primary" (click)="showAddModal()">Agregar Consumo</button>
+  
+    <nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+      <ng-container *nzModalContent>
+        <form nz-form [formGroup]="consumptionForm">
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="nameClient">Cliente</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <input nz-input formControlName="nameClient" id="nameClient" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="codUniqueElectric">Código Único</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-input-number formControlName="codUniqueElectric" id="codUniqueElectric" [nzMin]="0"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="meterNumber">Número de Medidor</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-input-number formControlName="meterNumber" id="meterNumber" [nzMin]="0"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="typeConsumption">Tipo de Consumo</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <input nz-input formControlName="typeConsumption" id="typeConsumption" />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="startDate">Fecha Inicio</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-date-picker formControlName="startDate" id="startDate"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="endDate">Fecha Fin</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-date-picker formControlName="endDate" id="endDate"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="description">Descripción</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <textarea nz-input formControlName="description" id="description" rows="4"></textarea>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="previousReading">Lectura Anterior</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-input-number formControlName="previousReading" id="previousReading" [nzMin]="0" [nzStep]="0.01"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="currentReading">Lectura Actual</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-input-number formControlName="currentReading" id="currentReading" [nzMin]="0" [nzStep]="0.01"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="contractAccount">Cuenta Contrato</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-input-number formControlName="contractAccount" id="contractAccount" [nzMin]="0"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="billedDays">Días Facturados</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-input-number formControlName="billedDays" id="billedDays" [nzMin]="0"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="consumptionTotal">Consumo Total</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-input-number formControlName="consumptionTotal" id="consumptionTotal" [nzMin]="0" [nzStep]="0.01"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" nzFor="total">Total</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24">
+              <nz-input-number formControlName="total" id="total" [nzMin]="0" [nzStep]="0.01"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </ng-container>
+    </nz-modal>
+  </nz-card>
